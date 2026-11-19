@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Interaktif ASAS IPAS Kelas 5</title>
+  <style>
+    :root {
+      --primary: #1d4ed8;
+      --primary-dark: #1e40af;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #cbd5e1;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --warning: #b45309;
+      --warning-bg: #fef3c7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 60px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--card);
+      border-bottom: 2px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .topbar-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--primary-dark);
+    }
+
+    .topbar-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #e2e8f0;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .timer-box {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid #f59e0b;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .timer-box.danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-color: #ef4444;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    }
+
+    .start-card h1 {
+      font-size: 1.5rem;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+
+    .start-card p {
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .info-list {
+      margin: 12px 0 20px 20px;
+      color: var(--text);
+    }
+
+    .info-list li {
+      margin-bottom: 6px;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .input-group input {
+      width: 100%;
+      max-width: 380px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-submit {
+      background: var(--success);
+      width: 100%;
+      padding: 14px;
+      font-size: 1.05rem;
+    }
+
+    .btn-submit:hover {
+      background: #166534;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .question-text {
+      font-size: 1.04rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .option-label:hover {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .option-label input[type="radio"] {
+      margin-top: 3px;
+      accent-color: var(--primary);
+      transform: scale(1.1);
+    }
+
+    .option-label.correct {
+      background: var(--success-bg);
+      border-color: var(--success);
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .option-label.wrong {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .explanation {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .score-summary {
+      text-align: center;
+      padding: 26px;
+      border-radius: 14px;
+      background: var(--card);
+      border: 2px solid var(--primary);
+      margin-bottom: 24px;
+    }
+
+    .score-big {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin: 10px 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-title">ASAS IPAS KELAS V — KURIKULUM MERDEKA</div>
+    <div class="topbar-meta">
+      <div class="badge" id="progressBadge">Terjawab: 0 / 40</div>
+      <div class="timer-box hidden" id="timerBox">Sisa Waktu: 30:00</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Halaman Awal -->
+    <div class="card start-card" id="startScreen">
+      <h1>Kuis Interaktif ASAS IPAS Kelas 5</h1>
+      <p>Latihan soal pilihan ganda berdasarkan kisi-kisi Asesmen Sumatif Akhir Semester I.</p>
+      <ul class="info-list">
+        <li><strong>Jumlah Soal:</strong> 40 soal pilihan ganda</li>
+        <li><strong>Waktu Pengerjaan:</strong> 30 menit (otomatis terkumpul saat waktu habis)</li>
+        <li><strong>Kunci Jawaban:</strong> Disembunyikan selama pengerjaan; skor dan pembahasan tampil setelah selesai</li>
+      </ul>
+      <div class="input-group">
+        <label for="studentName">Nama Peserta Didik</label>
+        <input type="text" id="studentName" placeholder="Masukkan nama lengkap..." />
+      </div>
+      <div class="input-group">
+        <label for="studentClass">Kelas / No. Absen</label>
+        <input type="text" id="studentClass" placeholder="Contoh: V A / 12" />
+      </div>
+      <button class="btn" id="startBtn">Mulai Kerjakan (30 Menit)</button>
+    </div>
+
+    <!-- Ringkasan Hasil -->
+    <div class="score-summary hidden" id="resultScreen">
+      <h2>Hasil Pengerjaan Kuis</h2>
+      <p id="studentInfoText" style="margin-top:6px; color:#475569;"></p>
+      <div class="score-big" id="finalScore">0</div>
+      <p id="detailStats" style="font-weight:600;"></p>
+      <button class="btn" style="margin-top:16px;" onclick="location.reload()">Ulangi Kuis</button>
+    </div>
+
+    <!-- Daftar Soal -->
+    <form id="quizForm" class="hidden"></form>
+
+    <div id="submitArea" class="hidden">
+      <button type="button" class="btn btn-submit" id="submitBtn">Selesai &amp; Lihat Skor</button>
+    </div>
+  </div>
+
+  <script>
+    const DURATION_SECONDS = 30 * 60; // 30 menit
+
+    const questions = [
+      {
+        no: 1,
+        topic: "Letak Geografis & Astronomis",
+        q: "Indonesia terletak pada posisi astronomis 6° LU – 11° LS dan 95° BT – 141° BT. Pengaruh letak astronomis tersebut terhadap kondisi iklim Indonesia adalah ....",
+        options: [
+          "Memiliki empat musim yang berganti setiap tiga bulan",
+          "Beriklim tropis dengan suhu hangat sepanjang tahun dan curah hujan cukup tinggi",
+          "Memiliki musim dingin yang panjang di seluruh wilayah kepulauan",
+          "Beriklim subtropis dengan perbedaan suhu siang dan malam yang ekstrem"
+        ],
+        ans: 1,
+        exp: "Letak lintang dekat khatulistiwa membuat Indonesia beriklim tropis dengan penyinaran matahari sepanjang tahun."
+      },
+      {
+        no: 2,
+        topic: "Simbol Peta",
+        q: "Pada sebuah peta, terdapat simbol garis bergerigi atau berliku berwarna biru yang menghubungkan wilayah daratan menuju laut. Simbol tersebut menunjukkan kenampakan ....",
+        options: [
+          "Gunung berapi aktif",
+          "Ibu kota provinsi",
+          "Sungai",
+          "Bandar udara"
+        ],
+        ans: 2,
+        exp: "Garis biru berliku pada peta umumnya melambangkan sungai."
+      },
+      {
+        no: 3,
+        topic: "Pengaruh Letak Khatulistiwa",
+        q: "Garis khatulistiwa melintasi wilayah Indonesia sehingga sinar matahari bersinar sepanjang tahun. Kesimpulan yang tepat mengenai pengaruh kondisi ini terhadap kegiatan pertanian adalah ....",
+        options: [
+          "Tanaman pertanian hanya dapat ditanam pada bulan Desember saja",
+          "Petani dapat menanam berbagai jenis tanaman sepanjang tahun dengan dukungan air yang cukup",
+          "Seluruh lahan pertanian membeku pada musim kemarau",
+          "Pertanian tidak dapat berkembang karena tidak ada pergantian musim"
+        ],
+        ans: 1,
+        exp: "Iklim tropis yang hangat dan adanya musim hujan serta kemarau mendukung budidaya tanaman sepanjang tahun."
+      },
+      {
+        no: 4,
+        topic: "Keanekaragaman Hayati",
+        q: "Kawasan pelestarian alam seperti Taman Nasional Komodo di Nusa Tenggara Timur merupakan habitat asli hewan endemik Indonesia berupa ....",
+        options: [
+          "Komodo",
+          "Badak bercula satu",
+          "Cendrawasih",
+          "Orangutan kalimantan"
+        ],
+        ans: 0,
+        exp: "Komodo merupakan hewan endemik yang dilindungi di kawasan Taman Nasional Komodo."
+      },
+      {
+        no: 5,
+        topic: "Jalur Perdagangan Dunia",
+        q: "Posisi Indonesia yang berada di antara dua benua dan dua samudra menjadikannya jalur perdagangan internasional yang ramai. Upaya yang tepat untuk memanfaatkan posisi tersebut adalah ....",
+        options: [
+          "Menutup seluruh pelabuhan agar kapal asing tidak melintas",
+          "Meningkatkan kualitas pelabuhan, infrastruktur logistik, dan produk lokal unggulan",
+          "Melarang ekspor hasil bumi ke negara tetangga",
+          "Mengurangi kerja sama ekonomi dengan negara lain"
+        ],
+        ans: 1,
+        exp: "Peningkatan fasilitas pelabuhan dan daya saing produk lokal membantu memaksimalkan keuntungan jalur perdagangan."
+      },
+      {
+        no: 6,
+        topic: "Kehidupan Masyarakat Maritim",
+        q: "Sebagian besar penduduk di suatu wilayah pesisir bekerja sebagai nelayan, pengusaha pelayaran, dan pembudidaya rumput laut. Karakteristik tersebut menggambarkan kehidupan masyarakat ....",
+        options: [
+          "Agraris",
+          "Maritim",
+          "Pertambangan pegunungan",
+          "Perkotaan industri berat"
+        ],
+        ans: 1,
+        exp: "Masyarakat maritim memanfaatkan dan menggantungkan aktivitas ekonomi serta kehidupannya pada wilayah laut."
+      },
+      {
+        no: 7,
+        topic: "Kehidupan Masyarakat Agraris",
+        q: "Musim kemarau yang lebih panjang dari biasanya membuat sawah tadah hujan kekurangan air. Solusi yang tepat bagi petani untuk mengatasi masalah tersebut adalah ....",
+        options: [
+          "Membakar seluruh jerami di sawah",
+          "Menerapkan sistem irigasi/pompa air dan memilih varietas tanaman yang tahan kekeringan",
+          "Menutup saluran air menuju sawah",
+          "Menebang pohon di sekitar daerah aliran sungai"
+        ],
+        ans: 1,
+        exp: "Pengaturan irigasi dan pemilihan komoditas adaptif membantu menjaga keberlangsungan pertanian saat kemarau."
+      },
+      {
+        no: 8,
+        topic: "Pelaku Ekonomi",
+        q: "Pak Rudi membeli kain, benang, dan pewarna alami, kemudian menjahitnya menjadi baju siap pakai untuk dijual ke toko. Peran Pak Rudi dalam kegiatan ekonomi adalah sebagai ....",
+        options: [
+          "Konsumen",
+          "Produsen",
+          "Distributor murni tanpa produksi",
+          "Pegawai bank"
+        ],
+        ans: 1,
+        exp: "Produsen adalah pihak yang menghasilkan barang atau jasa untuk memenuhi kebutuhan masyarakat."
+      },
+      {
+        no: 9,
+        topic: "Rantai Kegiatan Ekonomi",
+        q: "Urutan rantai kegiatan ekonomi yang tepat dari awal hingga akhir adalah ....",
+        options: [
+          "Konsumsi → Distribusi → Produksi",
+          "Distribusi → Produksi → Konsumsi",
+          "Produksi → Distribusi → Konsumsi",
+          "Konsumsi → Produksi → Distribusi"
+        ],
+        ans: 2,
+        exp: "Barang/jasa diproduksi terlebih dahulu (produksi), disalurkan (distribusi), lalu digunakan (konsumsi)."
+      },
+      {
+        no: 10,
+        topic: "Pengaruh Geografis terhadap Ekonomi",
+        q: "Wilayah dataran tinggi dengan udara sejuk sangat cocok untuk perkebunan teh, stroberi, dan sayuran. Pengaruh kondisi geografis tersebut terhadap mata pencaharian penduduk adalah ....",
+        options: [
+          "Penduduk umumnya bekerja sebagai nelayan tangkap laut dalam",
+          "Banyak penduduk bekerja sebagai petani hortikultura/perkebunan dan pelaku wisata alam",
+          "Seluruh penduduk bekerja sebagai penambang pasir laut",
+          "Tidak ada kegiatan ekonomi yang dapat dilakukan"
+        ],
+        ans: 1,
+        exp: "Suhu sejuk dan tanah subur di dataran tinggi mendukung perkebunan sayuran/teh serta ekowisata."
+      },
+      {
+        no: 11,
+        topic: "Sumber Daya Alam & Ekonomi",
+        q: "Masyarakat di sekitar hutan bambu mengolah bambu menjadi anyaman kerajinan bernilai jual. Analisis yang tepat tentang pemanfaatan SDA tersebut adalah ....",
+        options: [
+          "Pengolahan SDA meningkatkan nilai ekonomi sekaligus membuka lapangan kerja lokal",
+          "Mengolah bambu pasti merusak seluruh ekosistem hutan selamanya",
+          "Kerajinan bambu tidak memiliki nilai ekonomi bagi warga",
+          "SDA hanya bermanfaat jika dijual mentah tanpa diolah"
+        ],
+        ans: 0,
+        exp: "Pengolahan sumber daya alam secara terarah menambah nilai jual dan mendukung perekonomian warga."
+      },
+      {
+        no: 12,
+        topic: "Faktor Pendukung Ekonomi",
+        q: "Hasil panen buah di sebuah desa sering membusuk sebelum terjual karena jalan desa rusak dan sulit dilalui kendaraan. Faktor pendukung kegiatan ekonomi yang paling perlu diperbaiki adalah ....",
+        options: [
+          "Infrastruktur transportasi dan akses distribusi",
+          "Jumlah hari libur sekolah",
+          "Warna cat balai desa",
+          "Pengurangan jumlah pembeli"
+        ],
+        ans: 0,
+        exp: "Akses jalan dan transportasi yang baik sangat menentukan kelancaran distribusi hasil panen."
+      },
+      {
+        no: 13,
+        topic: "Kegiatan Ekonomi Berkelanjutan",
+        q: "Mengapa kegiatan ekonomi perlu memperhatikan kelestarian lingkungan?",
+        options: [
+          "Agar sumber daya alam tetap tersedia untuk generasi sekarang dan masa depan",
+          "Supaya biaya produksi selalu naik setiap hari",
+          "Agar hutan dapat ditebang habis tanpa sisa",
+          "Karena lingkungan tidak memengaruhi ketersediaan bahan baku"
+        ],
+        ans: 0,
+        exp: "Keberlanjutan lingkungan menjaga ketersediaan sumber daya alam dalam jangka panjang."
+      },
+      {
+        no: 14,
+        topic: "Pelaku Ekonomi yang Bijak",
+        q: "Contoh perilaku produsen yang bijak dalam menjalankan kegiatan ekonomi berkelanjutan adalah ....",
+        options: [
+          "Membuang limbah cair pabrik langsung ke sungai",
+          "Mengolah limbah produksi sebelum dibuang dan menggunakan bahan baku ramah lingkungan",
+          "Menangkap ikan menggunakan bahan peledak dan racun",
+          "Menggunakan kemasan plastik sekali pakai secara berlebihan tanpa daur ulang"
+        ],
+        ans: 1,
+        exp: "Pengolahan limbah dan penggunaan bahan ramah lingkungan mencerminkan produksi berkelanjutan."
+      },
+      {
+        no: 15,
+        topic: "Komponen Biotik & Abiotik",
+        q: "Perhatikan kelompok komponen berikut: (1) Padi, katak, belalang; (2) Air, cahaya matahari, tanah. Pengelompokan yang tepat adalah ....",
+        options: [
+          "(1) Komponen abiotik dan (2) Komponen biotik",
+          "(1) Komponen biotik dan (2) Komponen abiotik",
+          "Keduanya merupakan komponen abiotik saja",
+          "Keduanya merupakan benda mati"
+        ],
+        ans: 1,
+        exp: "Komponen biotik adalah makhluk hidup (padi, katak, belalang), sedangkan abiotik adalah benda tak hidup (air, cahaya, tanah)."
+      },
+      {
+        no: 16,
+        topic: "Peran Organisme dalam Ekosistem",
+        q: "Dalam ekosistem sawah, padi membuat makanan sendiri, tikus memakan padi, ular memakan tikus, dan jamur menguraikan sisa makhluk hidup yang mati. Peran jamur adalah sebagai ....",
+        options: [
+          "Produsen",
+          "Konsumen tingkat I",
+          "Dekomposer (pengurai)",
+          "Konsumen puncak"
+        ],
+        ans: 2,
+        exp: "Dekomposer menguraikan bahan organik mati menjadi zat hara yang kembali ke tanah."
+      },
+      {
+        no: 17,
+        topic: "Jaring-Jaring Makanan",
+        q: "Dalam suatu ekosistem kebun, tanaman hijau dimakan ulat dan belalang. Ulat dimakan burung pipit, dan burung pipit dimakan elang. Susunan aliran energi yang benar adalah ....",
+        options: [
+          "Elang → Burung pipit → Ulat → Tanaman hijau",
+          "Tanaman hijau → Ulat → Burung pipit → Elang",
+          "Ulat → Tanaman hijau → Elang → Burung pipit",
+          "Burung pipit → Tanaman hijau → Ulat → Elang"
+        ],
+        ans: 1,
+        exp: "Aliran energi dimulai dari produsen (tanaman hijau) menuju konsumen sesuai urutan makan-dimakan."
+      },
+      {
+        no: 18,
+        topic: "Keseimbangan Ekosistem",
+        q: "Jika populasi ular sawah menurun drastis akibat perburuan liar, dampak yang paling mungkin terjadi pada ekosistem sawah adalah ....",
+        options: [
+          "Populasi tikus cenderung meningkat dan dapat merusak tanaman padi",
+          "Populasi padi meningkat pesat tanpa hama sama sekali",
+          "Sinar matahari berhenti menyinari sawah",
+          "Semua air di sawah menghilang seketika"
+        ],
+        ans: 0,
+        exp: "Berkurangnya predator alami seperti ular dapat memicu ledakan populasi tikus."
+      },
+      {
+        no: 19,
+        topic: "Perilaku Menjaga Ekosistem",
+        q: "Tindakan manusia yang tepat untuk menjaga keseimbangan ekosistem adalah ....",
+        options: [
+          "Melakukan reboisasi dan tidak memburu satwa liar secara sembarangan",
+          "Membuka lahan dengan membakar hutan di musim kemarau",
+          "Menimbun sampah plastik di lahan resapan air",
+          "Menangkap seluruh ikan kecil hingga habis"
+        ],
+        ans: 0,
+        exp: "Reboisasi dan perlindungan satwa membantu mempertahankan keseimbangan rantai makanan dan habitat."
+      },
+      {
+        no: 20,
+        topic: "Karakteristik Siklus Air",
+        q: "Pernyataan yang benar mengenai karakteristik siklus air adalah ....",
+        options: [
+          "Air di bumi akan habis sekali pakai setelah hujan turun",
+          "Siklus air berlangsung terus-menerus melalui perubahan wujud dan perpindahan tempat",
+          "Siklus air hanya terjadi pada malam hari saja",
+          "Air laut tidak pernah mengalami penguapan"
+        ],
+        ans: 1,
+        exp: "Siklus air merupakan perputaran air yang berlangsung terus-menerus di bumi."
+      },
+      {
+        no: 21,
+        topic: "Proses Siklus Air",
+        q: "Urutan tahapan siklus air yang tepat adalah ....",
+        options: [
+          "Presipitasi → Evaporasi → Kondensasi",
+          "Evaporasi → Kondensasi → Presipitasi",
+          "Kondensasi → Presipitasi → Evaporasi",
+          "Infiltrasi → Presipitasi → Evaporasi"
+        ],
+        ans: 1,
+        exp: "Air menguap (evaporasi), membentuk awan (kondensasi), lalu turun sebagai hujan (presipitasi)."
+      },
+      {
+        no: 22,
+        topic: "Faktor Pengganggu Siklus Air",
+        q: "Aktivitas manusia yang dapat mengganggu siklus air dan mengurangi resapan air tanah adalah ....",
+        options: [
+          "Penebangan hutan secara liar dan betonisasi seluruh area resapan",
+          "Pembuatan sumur resapan dan biopori",
+          "Penanaman pohon di lahan kritis",
+          "Menjaga kebersihan daerah aliran sungai"
+        ],
+        ans: 0,
+        exp: "Hilangnya tutupan vegetasi dan permukaan kedap air mengurangi penyerapan air ke dalam tanah."
+      },
+      {
+        no: 23,
+        topic: "Pencemaran Air",
+        q: "Sungai yang tercemar limbah rumah tangga dan sampah dapat berdampak pada kesehatan manusia berupa ....",
+        options: [
+          "Penyakit kulit, diare, atau gangguan pencernaan jika airnya digunakan/dikonsumsi",
+          "Tulang menjadi lebih kuat dan sehat",
+          "Meningkatnya daya tahan tubuh secara otomatis",
+          "Hilangnya kebutuhan minum air bersih"
+        ],
+        ans: 0,
+        exp: "Air tercemar mengandung bakteri, virus, atau zat berbahaya yang memicu penyakit."
+      },
+      {
+        no: 24,
+        topic: "Penyaringan Air Sederhana",
+        q: "Dalam pembuatan alat penyaring air sederhana bertingkat, bahan yang berfungsi menyaring kotoran kasar, pasir, kerikil, arang, dan ijuk/kapas disusun agar air menjadi lebih jernih. Fungsi utama arang aktif dalam saringan air adalah ....",
+        options: [
+          "Membantu menyerap bau, warna, dan zat pencemar tertentu",
+          "Menambah rasa asin pada air",
+          "Membuat air menjadi mendidih",
+          "Menyumbat aliran air agar tidak keluar"
+        ],
+        ans: 0,
+        exp: "Arang membantu mengurangi bau, warna, dan partikel halus pada air saringan."
+      },
+      {
+        no: 25,
+        topic: "Kelestarian Sumber Air",
+        q: "Solusi berkelanjutan untuk menjaga ketersediaan air bersih di lingkungan sekitar adalah ....",
+        options: [
+          "Membuat lubang biopori, menanam pohon, dan menghemat penggunaan air",
+          "Membuang minyak jelantah ke selokan rumah",
+          "Membiarkan keran air menetes sepanjang hari",
+          "Menutup seluruh danau dan waduk"
+        ],
+        ans: 0,
+        exp: "Konservasi air melalui resapan alami, vegetasi, dan penghematan menjaga cadangan air bersih."
+      },
+      {
+        no: 26,
+        topic: "Letak Geografis Indonesia",
+        q: "Secara geografis, negara Indonesia terletak di antara ....",
+        options: [
+          "Benua Asia dan Benua Australia serta Samudra Hindia dan Samudra Pasifik",
+          "Benua Eropa dan Benua Amerika serta Samudra Arktik",
+          "Benua Afrika dan Benua Antartika saja",
+          "Samudra Atlantik dan Laut Baltik"
+        ],
+        ans: 0,
+        exp: "Letak geografis Indonesia berada di antara dua benua (Asia dan Australia) dan dua samudra (Hindia dan Pasifik)."
+      },
+      {
+        no: 27,
+        topic: "Kode Warna pada Peta",
+        q: "Berdasarkan konvensi legenda peta kenampakan alam, warna yang umumnya digunakan untuk menggambarkan wilayah dataran rendah adalah ....",
+        options: [
+          "Hijau",
+          "Cokelat tua pekat",
+          "Biru tua laut dalam",
+          "Merah menyala"
+        ],
+        ans: 0,
+        exp: "Pada peta kenampakan alam, warna hijau sering digunakan untuk menunjukkan dataran rendah."
+      },
+      {
+        no: 28,
+        topic: "Budaya Maritim & Agraris",
+        q: "Tradisi sedekah laut atau petik laut oleh masyarakat pesisir merupakan cerminan budaya masyarakat yang kehidupannya erat kaitannya dengan ....",
+        options: [
+          "Aktivitas kelautan dan perikanan (masyarakat maritim)",
+          "Pertambangan batu bara bawah tanah",
+          "Industri pesawat terbang",
+          "Kehidupan padang pasir bersalju"
+        ],
+        ans: 0,
+        exp: "Tradisi pesisir seperti petik laut mencerminkan kedekatan budaya masyarakat maritim dengan laut."
+      },
+      {
+        no: 29,
+        topic: "Peran Pelaku Ekonomi",
+        q: "Bu Sari berbelanja beras, sayur, dan buah di pasar untuk dimasak bagi keluarganya. Dalam kegiatan ekonomi, Bu Sari berperan sebagai ....",
+        options: [
+          "Konsumen",
+          "Produsen",
+          "Eksportir barang tambang",
+          "Pembuat undang-undang"
+        ],
+        ans: 0,
+        exp: "Konsumen adalah pihak yang memakai atau mengonsumsi barang dan jasa untuk memenuhi kebutuhan."
+      },
+      {
+        no: 30,
+        topic: "Faktor Pendukung Ekonomi",
+        q: "Seorang pengrajin batik kini dapat memasarkan produknya ke luar kota melalui media digital dan layanan pengiriman paket. Faktor pendukung utama yang membantu usaha tersebut adalah ....",
+        options: [
+          "Kemajuan teknologi informasi, komunikasi, dan jasa pengiriman",
+          "Kelangkaan bahan baku kain",
+          "Penutupan akses jalan",
+          "Penurunan minat beli masyarakat"
+        ],
+        ans: 0,
+        exp: "Teknologi komunikasi dan layanan logistik memperluas jangkauan pemasaran pelaku usaha."
+      },
+      {
+        no: 31,
+        topic: "Perilaku Bijak Konsumen",
+        q: "Siti memiliki uang saku terbatas. Sikap paling bijak yang sebaiknya dilakukan Siti saat berbelanja adalah ....",
+        options: [
+          "Membeli barang sesuai kebutuhan utama dan menyisihkan tabungan",
+          "Menghabiskan seluruh uang untuk mainan yang tidak dibutuhkan",
+          "Berutang untuk membeli barang mahal demi gengsi",
+          "Membeli makanan secara berlebihan lalu membuangnya"
+        ],
+        ans: 0,
+        exp: "Konsumen yang bijak mengutamakan kebutuhan, menyesuaikan kemampuan keuangan, dan menabung."
+      },
+      {
+        no: 32,
+        topic: "Tingkatan Organisasi Kehidupan",
+        q: "Sekumpulan ikan nila yang hidup bersama di satu kolam yang sama disebut sebagai ....",
+        options: [
+          "Populasi",
+          "Biosfer",
+          "Sel",
+          "Jaringan"
+        ],
+        ans: 0,
+        exp: "Populasi adalah kumpulan individu sejenis yang menempati wilayah dan waktu yang sama."
+      },
+      {
+        no: 33,
+        topic: "Dampak Bahan Kimia terhadap Ekosistem",
+        q: "Penggunaan pestisida kimia secara berlebihan di lahan pertanian dapat berdampak pada ekosistem berupa ....",
+        options: [
+          "Matinya serangga penyerbuk atau organisme berguna serta pencemaran tanah dan air",
+          "Bertambahnya jumlah burung pemangsa secara alami",
+          "Air tanah menjadi otomatis murni tanpa penyaringan",
+          "Hilangnya seluruh gulma tanpa memengaruhi tanah"
+        ],
+        ans: 0,
+        exp: "Pestisida berlebih dapat membunuh organisme non-target dan mencemari lingkungan sekitar."
+      },
+      {
+        no: 34,
+        topic: "Proses Siklus Air",
+        q: "Proses berubahnya uap air di atmosfer menjadi titik-titik air yang membentuk awan disebut ....",
+        options: [
+          "Kondensasi (pengembunan)",
+          "Evaporasi (penguapan)",
+          "Presipitasi (hujan)",
+          "Transpirasi"
+        ],
+        ans: 0,
+        exp: "Kondensasi adalah perubahan wujud gas (uap air) menjadi titik-titik cairan membentuk awan."
+      },
+      {
+        no: 35,
+        topic: "Pencemaran Air di Permukiman",
+        q: "Di sebuah permukiman padat, warga membuang sampah rumah tangga ke sungai dan mengalirkan air cucian langsung ke parit terbuka. Penyebab utama pencemaran air sungai tersebut adalah ....",
+        options: [
+          "Pembuangan sampah dan limbah domestik ke badan air tanpa pengolahan",
+          "Turunnya hujan di pegunungan",
+          "Adanya ikan-ikan kecil di sungai",
+          "Penanaman pohon di bantaran sungai"
+        ],
+        ans: 0,
+        exp: "Sampah dan limbah rumah tangga yang masuk ke sungai menurunkan kualitas air."
+      },
+      {
+        no: 36,
+        topic: "Geografis & Keragaman Budaya",
+        q: "Perbedaan kondisi geografis antarwilayah di Indonesia memengaruhi keragaman budaya dan tradisi masyarakat. Contoh yang paling tepat untuk menggambarkan hal ini adalah ....",
+        options: [
+          "Masyarakat pegunungan memiliki pakaian adat yang cenderung hangat, sedangkan masyarakat pesisir memiliki tradisi melaut",
+          "Semua daerah di Indonesia memiliki rumah adat dan bahasa yang sama persis",
+          "Kondisi geografis tidak pernah memengaruhi cara berpakaian atau mata pencaharian",
+          "Tradisi lokal hanya muncul di wilayah perkotaan modern"
+        ],
+        ans: 0,
+        exp: "Adaptasi terhadap iklim, topografi, dan sumber daya setempat melahirkan keragaman budaya dan tradisi."
+      },
+      {
+        no: 37,
+        topic: "Letak Strategis & Perdagangan",
+        q: "Selain memberi peluang ekonomi dari jalur perdagangan dunia, letak strategis Indonesia juga membawa tantangan. Upaya terbaik untuk memaksimalkan keuntungan sekaligus mengurangi kerugian adalah ....",
+        options: [
+          "Memperkuat keamanan laut, menegakkan aturan perdagangan, dan meningkatkan SDM lokal",
+          "Mengabaikan pengawasan perbatasan laut",
+          "Menghentikan seluruh kegiatan ekspor dan impor",
+          "Menyerahkan pengelolaan sumber daya tanpa aturan"
+        ],
+        ans: 0,
+        exp: "Penguatan keamanan, regulasi yang tepat, dan peningkatan kualitas SDM memaksimalkan manfaat serta menekan risiko."
+      },
+      {
+        no: 38,
+        topic: "Distribusi & Pengolahan Hasil Pertanian",
+        q: "Saat panen raya, harga tomat anjlok karena melimpah dan cepat busuk. Solusi inovatif yang tepat untuk mengatasi permasalahan tersebut adalah ....",
+        options: [
+          "Mengolah tomat menjadi saus, selai, atau tomat kering serta memperluas jalur pemasaran",
+          "Membiarkan tomat membusuk di ladang",
+          "Menutup akses jalan menuju pasar",
+          "Melarang petani menanam tomat pada musim berikutnya"
+        ],
+        ans: 0,
+        exp: "Pengolahan pascapanen memperpanjang daya simpan dan menambah nilai jual produk pertanian."
+      },
+      {
+        no: 39,
+        topic: "Jaring-Jaring Makanan & Keseimbangan",
+        q: "Dalam sebuah jaring-jaring makanan padang rumput, rumput dimakan rusa dan kelinci; rusa dan kelinci dimakan serigala. Jika populasi rumput menurun drastis akibat kekeringan, kesimpulan yang tepat adalah ....",
+        options: [
+          "Populasi rusa dan kelinci dapat menurun karena kekurangan makanan, yang juga berdampak pada serigala",
+          "Populasi serigala akan meningkat pesat tanpa sumber makanan",
+          "Rusa berubah menjadi produsen yang membuat makanan sendiri",
+          "Keseimbangan ekosistem tidak terpengaruh sama sekali"
+        ],
+        ans: 0,
+        exp: "Penurunan produsen (rumput) berdampak berantai pada konsumen herbivora dan karnivora di atasnya."
+      },
+      {
+        no: 40,
+        topic: "Ketersediaan Air Bersih & Pelestarian",
+        q: "Sumber mata air di sebuah desa mulai menyusut karena penggundulan hutan di perbukitan dan borosnya penggunaan air. Tiga upaya yang tepat untuk mengatasi masalah tersebut adalah ....",
+        options: [
+          "Reboisasi perbukitan, membuat sumur resapan/biopori, dan menghemat penggunaan air",
+          "Menebang sisa pohon, membuang limbah ke mata air, dan membiarkan keran terbuka",
+          "Mengeringkan sumur warga, menutup hutan, dan melarang menanam pohon",
+          "Membuang sampah ke sungai, menggunduli bukit, dan memboroskan air"
+        ],
+        ans: 0,
+        exp: "Penghijauan, peningkatan resapan air tanah, dan penghematan merupakan langkah efektif menjaga ketersediaan air bersih."
+      }
+    ];
+
+    const startScreen = document.getElementById("startScreen");
+    const quizForm = document.getElementById("quizForm");
+    const submitArea = document.getElementById("submitArea");
+    const resultScreen = document.getElementById("resultScreen");
+    const startBtn = document.getElementById("startBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const progressBadge = document.getElementById("progressBadge");
+    const timerBox = document.getElementById("timerBox");
+
+    let remainingSeconds = DURATION_SECONDS;
+    let timerInterval = null;
+    let isSubmitted = false;
+
+    function renderQuestions() {
+      const letters = ["A", "B", "C", "D"];
+      quizForm.innerHTML = "";
+
+      questions.forEach((item, idx) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.id = `q-card-${idx}`;
+
+        const header = document.createElement("div");
+        header.className = "question-header";
+        header.innerHTML = `<span>Soal No. ${item.no}</span><span>Materi: ${item.topic}</span>`;
+
+        const qText = document.createElement("div");
+        qText.className = "question-text";
+        qText.textContent = `${item.no}. ${item.q}`;
+
+        const optionsDiv = document.createElement("div");
+        optionsDiv.className = "options";
+
+        item.options.forEach((opt, optIdx) => {
+          const label = document.createElement("label");
+          label.className = "option-label";
+          label.id = `opt-label-${idx}-${optIdx}`;
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `q_${idx}`;
+          radio.value = optIdx;
+          radio.addEventListener("change", updateProgress);
+
+          const span = document.createElement("span");
+          span.textContent = `${letters[optIdx]}. ${opt}`;
+
+          label.appendChild(radio);
+          label.appendChild(span);
+          optionsDiv.appendChild(label);
+        });
+
+        card.appendChild(header);
+        card.appendChild(qText);
+        card.appendChild(optionsDiv);
+        quizForm.appendChild(card);
+      });
+    }
+
+    function updateProgress() {
+      let answered = 0;
+      questions.forEach((_, idx) => {
+        if (document.querySelector(`input[name="q_${idx}"]:checked`)) {
+          answered++;
+        }
+      });
+      progressBadge.textContent = `Terjawab: ${answered} / ${questions.length}`;
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+
+    function startTimer() {
+      timerBox.classList.remove("hidden");
+      timerBox.textContent = `Sisa Waktu: ${formatTime(remainingSeconds)}`;
+
+      timerInterval = setInterval(() => {
+        remainingSeconds--;
+        timerBox.textContent = `Sisa Waktu: ${formatTime(remainingSeconds)}`;
+
+        if (remainingSeconds <= 300) {
+          timerBox.classList.add("danger");
+        }
+
+        if (remainingSeconds <= 0) {
+          clearInterval(timerInterval);
+          submitQuiz(true);
+        }
+      }, 1000);
+    }
+
+    function submitQuiz(autoByTime = false) {
+      if (isSubmitted) return;
+      isSubmitted = true;
+      clearInterval(timerInterval);
+
+      // Kunci pilihan radio setelah dikumpulkan
+      document.querySelectorAll('input[type="radio"]').forEach((input) => {
+        input.disabled = true;
+      });
+
+      let correctCount = 0;
+      let wrongCount = 0;
+      let unansweredCount = 0;
+
+      questions.forEach((item, idx) => {
+        const selected = document.querySelector(`input[name="q_${idx}"]:checked`);
+        const userAns = selected ? parseInt(selected.value, 10) : null;
+
+        const correctLabel = document.getElementById(`opt-label-${idx}-${item.ans}`);
+        if (correctLabel) {
+          correctLabel.classList.add("correct");
+        }
+
+        if (userAns === null) {
+          unansweredCount++;
+        } else if (userAns === item.ans) {
+          correctCount++;
+        } else {
+          wrongCount++;
+          const wrongLabel = document.getElementById(`opt-label-${idx}-${userAns}`);
+          if (wrongLabel) {
+            wrongLabel.classList.add("wrong");
+          }
+        }
+
+        const card = document.getElementById(`q-card-${idx}`);
+        const expBox = document.createElement("div");
+        expBox.className = "explanation";
+        const letters = ["A", "B", "C", "D"];
+        expBox.innerHTML = `<strong>Kunci Jawaban: ${letters[item.ans]}</strong> — ${item.exp}`;
+        card.appendChild(expBox);
+      });
+
+      const score = Math.round((correctCount / questions.length) * 100);
+      const nameVal = document.getElementById("studentName").value.trim() || "Peserta Didik";
+      const classVal = document.getElementById("studentClass").value.trim() || "-";
+
+      document.getElementById("studentInfoText").textContent =
+        `Nama: ${nameVal} | Kelas/Absen: ${classVal}${autoByTime ? " (Waktu habis — otomatis dikumpulkan)" : ""}`;
+      document.getElementById("finalScore").textContent = `Skor: ${score}`;
+      document.getElementById("detailStats").textContent =
+        `Benar: ${correctCount} | Salah: ${wrongCount} | Tidak Dijawab: ${unansweredCount}`;
+
+      submitArea.classList.add("hidden");
+      resultScreen.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    startBtn.addEventListener("click", () => {
+      renderQuestions();
+      startScreen.classList.add("hidden");
+      quizForm.classList.remove("hidden");
+      submitArea.classList.remove("hidden");
+      startTimer();
+    });
+
+    submitBtn.addEventListener("click", () => {
+      const confirmed = confirm("Yakin ingin menyelesaikan kuis dan melihat skor?");
+      if (confirmed) {
+        submitQuiz(false);
+      }
+    });
+  </script>
+</body>
+</html>
